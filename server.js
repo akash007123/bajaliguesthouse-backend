@@ -11,6 +11,7 @@ connectDB();
 // Middleware
 app.use(cors({ origin: '*' })); // Allow all origins
 app.use(express.json({ limit: '10mb' }));
+app.use('/uploads', express.static('uploads'));
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
