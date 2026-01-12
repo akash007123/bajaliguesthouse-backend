@@ -3,6 +3,14 @@ const router = express.Router();
 const { auth, requireRole } = require('../middleware/auth');
 const { getRooms, createRoom, updateRoom, deleteRoom } = require('../controllers/roomController');
 const { getBookings, updateBookingStatus } = require('../controllers/bookingController');
+const {
+  getCustomBookings,
+  getCustomBooking,
+  createCustomBooking,
+  updateCustomBooking,
+  deleteCustomBooking,
+  updateCustomBookingStatus
+} = require('../controllers/customBookingController');
 
 router.use(auth);
 router.use(requireRole('admin'));
@@ -16,6 +24,14 @@ router.delete('/rooms/:id', deleteRoom);
 // Bookings
 router.get('/bookings', getBookings);
 router.put('/bookings/:id/status', updateBookingStatus);
+
+// Custom Bookings
+router.get('/bookings/custom', getCustomBookings);
+router.get('/bookings/custom/:id', getCustomBooking);
+router.post('/bookings/custom', createCustomBooking);
+router.put('/bookings/custom/:id', updateCustomBooking);
+router.delete('/bookings/custom/:id', deleteCustomBooking);
+router.put('/bookings/custom/:id/status', updateCustomBookingStatus);
 
 // Dashboard
 router.get('/dashboard', async (req, res) => {

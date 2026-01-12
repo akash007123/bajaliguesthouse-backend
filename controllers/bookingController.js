@@ -58,6 +58,7 @@ exports.createBooking = async (req, res) => {
       userId: req.user.id,
       userName: user.name,
       userEmail: user.email,
+      userMobile: user.mobile,
       checkIn: checkInDate,
       checkOut: checkOutDate,
       guests,
