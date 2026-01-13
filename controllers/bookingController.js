@@ -94,3 +94,24 @@ exports.cancelBooking = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
+
+exports.submitReview = async (req, res) => {
+  try {
+    const booking = await Booking.findById(req.params.id);
+    if (!booking) return res.status(404).json({ message: 'Booking not found' });
+    if (booking.userId.toString() !== req.user.id) return res.status(403).json({ message: 'Access denied' });
+    if (booking.status !== 'Completed') return res.status(400).json({ message: 'Can only review completed bookings' });
+    if (booking.reviewed) return res.status(400).json({ message: 'Booking already reviewed' });
+
+    const { rating, feedback } = req.body;
+    if (!rating || rating < 1 || rating > 5) return res.status(400).json({ message: 'Invalid rating' });
+
+    booking.rating = rating;
+    booking.feedback = feedback;
+    booking.reviewed = true;
+    await booking.save();
+    res.json(booking);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};

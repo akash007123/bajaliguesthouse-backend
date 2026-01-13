@@ -22,6 +22,7 @@ router.use(requireRole('user'));
 router.get('/bookings', getBookings);
 router.post('/bookings', createBooking);
 router.put('/bookings/:id/cancel', require('../controllers/bookingController').cancelBooking);
+router.post('/bookings/:id/review', require('../controllers/bookingController').submitReview);
 router.get('/profile', getProfile);
 router.put('/profile', upload.single('profilePicture'), updateProfile);
 

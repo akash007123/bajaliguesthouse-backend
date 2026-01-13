@@ -11,8 +11,11 @@ const bookingSchema = new mongoose.Schema({
   checkOut: { type: Date, required: true },
   guests: { type: Number, required: true },
   totalPrice: { type: Number, required: true },
-  status: { type: String, enum: ['New', 'Pending', 'Approved', 'Cancelled'], default: 'New' },
+  status: { type: String, enum: ['New', 'Pending', 'Approved', 'Cancelled', 'Completed'], default: 'New' },
   specialRequests: String,
+  reviewed: { type: Boolean, default: false },
+  rating: Number,
+  feedback: String,
   createdAt: { type: Date, default: Date.now }
 });
 
