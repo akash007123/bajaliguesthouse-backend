@@ -134,3 +134,12 @@ exports.updateReviewStatus = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
+
+exports.getApprovedReviews = async (req, res) => {
+  try {
+    const reviews = await Booking.find({ reviewed: true, reviewApproved: true }).populate('userId', 'profilePicture name');
+    res.json(reviews);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
