@@ -115,3 +115,22 @@ exports.submitReview = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
+
+exports.getReviews = async (req, res) => {
+  try {
+    const reviews = await Booking.find({ reviewed: true }).populate('roomId');
+    res.json(reviews);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.updateReviewStatus = async (req, res) => {
+  try {
+    const booking = await Booking.findByIdAndUpdate(req.params.id, { reviewApproved: req.body.approved }, { new: true });
+    if (!booking) return res.status(404).json({ message: 'Review not found' });
+    res.json(booking);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};

@@ -14,6 +14,7 @@ const bookingSchema = new mongoose.Schema({
   status: { type: String, enum: ['New', 'Pending', 'Approved', 'Cancelled', 'Completed'], default: 'New' },
   specialRequests: String,
   reviewed: { type: Boolean, default: false },
+  reviewApproved: { type: Boolean, default: false },
   rating: Number,
   feedback: String,
   createdAt: { type: Date, default: Date.now }

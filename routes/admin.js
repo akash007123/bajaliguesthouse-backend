@@ -3,7 +3,7 @@ const router = express.Router();
 const multer = require('multer');
 const { auth, requireRole } = require('../middleware/auth');
 const { getRooms, createRoom, updateRoom, deleteRoom } = require('../controllers/roomController');
-const { getBookings, updateBookingStatus } = require('../controllers/bookingController');
+const { getBookings, updateBookingStatus, getReviews, updateReviewStatus } = require('../controllers/bookingController');
 const {
   getCustomBookings,
   getCustomBooking,
@@ -38,6 +38,10 @@ router.delete('/rooms/:id', deleteRoom);
 // Bookings
 router.get('/bookings', getBookings);
 router.put('/bookings/:id/status', updateBookingStatus);
+
+// Reviews
+router.get('/reviews', getReviews);
+router.put('/reviews/:id/status', updateReviewStatus);
 
 // Custom Bookings
 router.get('/bookings/custom', getCustomBookings);
