@@ -44,16 +44,37 @@ const uploadFields = upload.fields([
   { name: 'profilePic', maxCount: 1 }
 ]);
 
-// Get all custom bookings with pagination
+// Get all custom bookings with pagination, filters, search, sort
 exports.getCustomBookings = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
+    const { from, to, search, sortBy = 'createdAt', sortOrder = 'desc' } = req.query;
 
-    const totalBookings = await CustomBooking.countDocuments();
-    const bookings = await CustomBooking.find()
-      .sort({ createdAt: -1 })
+    let match = {};
+
+    // Date filter
+    if (from && to) {
+      match.createdAt = { $gte: new Date(from), $lte: new Date(to) };
+    }
+
+    // Search filter (by name, email, or booking ID)
+    if (search) {
+      match.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } },
+        { _id: search } // Exact match for ID
+      ];
+    }
+
+    // Sort options
+    const sortOptions = {};
+    sortOptions[sortBy] = sortOrder === 'asc' ? 1 : -1;
+
+    const totalBookings = await CustomBooking.countDocuments(match);
+    const bookings = await CustomBooking.find(match)
+      .sort(sortOptions)
       .skip(skip)
       .limit(limit);
 
