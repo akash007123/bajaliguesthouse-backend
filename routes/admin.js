@@ -10,7 +10,8 @@ const {
   createCustomBooking,
   updateCustomBooking,
   deleteCustomBooking,
-  updateCustomBookingStatus
+  updateCustomBookingStatus,
+  getRevenue
 } = require('../controllers/customBookingController');
 const { getStaff, getStaffMember, createStaff, updateStaff, deleteStaff } = require('../controllers/staffController');
 
@@ -45,6 +46,9 @@ router.post('/bookings/custom', createCustomBooking);
 router.put('/bookings/custom/:id', updateCustomBooking);
 router.delete('/bookings/custom/:id', deleteCustomBooking);
 router.put('/bookings/custom/:id/status', updateCustomBookingStatus);
+
+// Revenue
+router.get('/revenue', getRevenue);
 
 // Staff
 router.get('/staff', getStaff);

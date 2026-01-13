@@ -195,3 +195,135 @@ exports.updateCustomBookingStatus = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
+
+// Get revenue data
+exports.getRevenue = async (req, res) => {
+  try {
+    const { type, from, to } = req.query;
+    const now = new Date();
+    let startDate, endDate;
+
+    // Filter for confirmed and paid bookings
+    const match = {
+      status: 'confirmed'
+      // paymentStatus: 'paid' // Temporarily removed for testing
+    };
+
+    if (type === 'custom' && from && to) {
+      startDate = new Date(from);
+      endDate = new Date(to);
+    } else if (type === 'day') {
+      startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    } else if (type === 'week') {
+      const dayOfWeek = now.getDay();
+      startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayOfWeek);
+      endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + (6 - dayOfWeek) + 1);
+    } else if (type === 'month') {
+      startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+      endDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    } else if (type === 'year') {
+      startDate = new Date(now.getFullYear(), 0, 1);
+      endDate = new Date(now.getFullYear() + 1, 0, 1);
+    } else {
+      // Default to today
+      startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    }
+
+    match.createdAt = { $gte: startDate, $lt: endDate };
+
+    const bookings = await CustomBooking.find(match);
+
+    let totalRevenue = 0;
+    let chartData = [];
+
+    if (type === 'day') {
+      // For day, perhaps hourly or just total
+      totalRevenue = bookings.reduce((sum, b) => sum + (b.roomAmount * b.numberOfRooms), 0);
+      chartData = [{ date: startDate.toISOString().split('T')[0], revenue: totalRevenue }];
+    } else if (type === 'week') {
+      // Group by day
+      const days = {};
+      bookings.forEach(b => {
+        const date = b.createdAt.toISOString().split('T')[0];
+        if (!days[date]) days[date] = 0;
+        days[date] += b.roomAmount * b.numberOfRooms;
+      });
+      chartData = Object.keys(days).map(date => ({ date, revenue: days[date] }));
+      totalRevenue = Object.values(days).reduce((sum, rev) => sum + rev, 0);
+    } else if (type === 'month') {
+      // Group by week
+      const weeks = {};
+      bookings.forEach(b => {
+        const weekStart = new Date(b.createdAt);
+        weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+        const weekKey = weekStart.toISOString().split('T')[0];
+        if (!weeks[weekKey]) weeks[weekKey] = 0;
+        weeks[weekKey] += b.roomAmount * b.numberOfRooms;
+      });
+      chartData = Object.keys(weeks).map(week => ({ date: week, revenue: weeks[week] }));
+      totalRevenue = Object.values(weeks).reduce((sum, rev) => sum + rev, 0);
+    } else if (type === 'year') {
+      // Group by month
+      const months = {};
+      bookings.forEach(b => {
+        const monthKey = `${b.createdAt.getFullYear()}-${String(b.createdAt.getMonth() + 1).padStart(2, '0')}`;
+        if (!months[monthKey]) months[monthKey] = 0;
+        months[monthKey] += b.roomAmount * b.numberOfRooms;
+      });
+      chartData = Object.keys(months).map(month => ({ date: month, revenue: months[month] }));
+      totalRevenue = Object.values(months).reduce((sum, rev) => sum + rev, 0);
+    } else {
+      // Custom or default
+      totalRevenue = bookings.reduce((sum, b) => sum + (b.roomAmount * b.numberOfRooms), 0);
+      chartData = [{ date: 'Total', revenue: totalRevenue }];
+    }
+
+    // Also calculate KPIs
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    const todayRevenue = await CustomBooking.aggregate([
+      { $match: { status: 'confirmed', createdAt: { $gte: todayStart, $lt: todayEnd } } },
+      { $group: { _id: null, total: { $sum: { $multiply: ['$roomAmount', '$numberOfRooms'] } } } }
+    ]);
+    const today = todayRevenue.length > 0 ? todayRevenue[0].total : 0;
+
+    const weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
+    const weekEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate() + (6 - now.getDay()) + 1);
+    const weekRevenue = await CustomBooking.aggregate([
+      { $match: { status: 'confirmed', createdAt: { $gte: weekStart, $lt: weekEnd } } },
+      { $group: { _id: null, total: { $sum: { $multiply: ['$roomAmount', '$numberOfRooms'] } } } }
+    ]);
+    const thisWeek = weekRevenue.length > 0 ? weekRevenue[0].total : 0;
+
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    const monthRevenue = await CustomBooking.aggregate([
+      { $match: { status: 'confirmed', createdAt: { $gte: monthStart, $lt: monthEnd } } },
+      { $group: { _id: null, total: { $sum: { $multiply: ['$roomAmount', '$numberOfRooms'] } } } }
+    ]);
+    const thisMonth = monthRevenue.length > 0 ? monthRevenue[0].total : 0;
+
+    const yearStart = new Date(now.getFullYear(), 0, 1);
+    const yearEnd = new Date(now.getFullYear() + 1, 0, 1);
+    const yearRevenue = await CustomBooking.aggregate([
+      { $match: { status: 'confirmed', createdAt: { $gte: yearStart, $lt: yearEnd } } },
+      { $group: { _id: null, total: { $sum: { $multiply: ['$roomAmount', '$numberOfRooms'] } } } }
+    ]);
+    const thisYear = yearRevenue.length > 0 ? yearRevenue[0].total : 0;
+
+    res.json({
+      kpis: {
+        today,
+        thisWeek,
+        thisMonth,
+        thisYear
+      },
+      totalRevenue,
+      chartData
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

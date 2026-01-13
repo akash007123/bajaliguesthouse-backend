@@ -11,7 +11,8 @@ const customBookingSchema = new mongoose.Schema({
   numberOfRooms: { type: Number, required: true, default: 1 },
   numberOfGuests: { type: Number, required: true, default: 1 },
   roomNo: { type: String, required: true },
-  status: { type: String, enum: ['Active', 'Completed', 'Cancelled'], default: 'Active' },
+  status: { type: String, enum: ['confirmed', 'Active', 'Completed', 'Cancelled'], default: 'confirmed' },
+  paymentStatus: { type: String, enum: ['paid', 'pending', 'failed'], default: 'pending' },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });
