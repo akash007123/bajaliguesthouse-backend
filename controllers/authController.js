@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { sendWelcomeEmail } = require('../utils/email');
 
 exports.signup = async (req, res) => {
   const { name, email, password, mobile, address, role } = req.body;
@@ -12,6 +13,9 @@ exports.signup = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({ name, email, password: hashedPassword, mobile, address, profilePicture, role: role || 'user' });
     await user.save();
+
+    // Send welcome email asynchronously
+    sendWelcomeEmail(email, name);
 
     const token = jwt.sign({ id: user._id, name, email, role: user.role }, process.env.JWT_SECRET);
     res.status(201).json({ token, user: { id: user._id, name, email, mobile, address, profilePicture, role: user.role } });
