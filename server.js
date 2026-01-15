@@ -23,6 +23,7 @@ app.use('/api/bookings', require('./routes/bookings'));
 // Hotel info
 const hotelInfo = {
   name: 'Shri Balaji ',
+  subname: 'Home Stay',
   tagline: 'Where Luxury Meets Tranquility',
   description: 'Nestled along the pristine Mediterranean coastline, Shri Balaji  offers an unparalleled escape into luxury and serenity. Our boutique hotel combines timeless elegance with modern comfort, creating unforgettable experiences for our distinguished guests.',
   address: '123 Coastal Drive, Mediterranean Bay, 12345',

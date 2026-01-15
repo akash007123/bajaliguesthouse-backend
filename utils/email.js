@@ -14,7 +14,7 @@ const sendWelcomeEmail = async (email, name) => {
   const mailOptions = {
     from: process.env.EMAIL_FROM,
     to: email,
-    subject: 'Welcome to Shri Balaji Guest House - Your Home Away From Home!',
+    subject: 'Welcome to Shri Balaji Home Stay - Your Home Away From Home!',
     html: `
       <!DOCTYPE html>
       <html>
@@ -31,9 +31,9 @@ const sendWelcomeEmail = async (email, name) => {
           <div style="background: linear-gradient(135deg, #1a237e 0%, #283593 100%); padding: 30px 20px; text-align: center;">
             <!-- Logo Placeholder - Replace with actual logo URL -->
             <div style="margin-bottom: 20px;">
-              <img src="https://s3.us-east-1.amazonaws.com/cdn.designcrowd.com/blog/120-cool-logos-for-a-fresh-new-look/gaming-battle-soldier-sword-by-amcstudio-brandcrowd.png" alt="Shri Balaji Guest House" style="max-width: 180px; height: auto; background-color: white; padding: 15px; border-radius: 10px; display: inline-block;">
+              <img src="https://s3.us-east-1.amazonaws.com/cdn.designcrowd.com/blog/120-cool-logos-for-a-fresh-new-look/gaming-battle-soldier-sword-by-amcstudio-brandcrowd.png" alt="Shri Balaji Home Stay" style="max-width: 180px; height: auto; background-color: white; padding: 15px; border-radius: 10px; display: inline-block;">
             </div>
-            <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 600;">Shri Balaji Guest House</h1>
+            <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 600;">Shri Balaji Home Stay</h1>
             <p style="color: #e0e0ff; margin: 10px 0 0; font-size: 16px;">Experience Divine Comfort & Hospitality</p>
           </div>
           
@@ -42,7 +42,7 @@ const sendWelcomeEmail = async (email, name) => {
             <h2 style="color: #1a237e; margin-top: 0; font-size: 24px;">Namaste, ${name}!</h2>
             
             <p style="color: #555; line-height: 1.7; font-size: 16px; margin-bottom: 25px;">
-              Welcome to the Shri Balaji Guest House family! We're absolutely delighted to have you with us. 
+              Welcome to the Shri Balaji Home Stay family! We're absolutely delighted to have you with us. 
               Your account has been successfully created, unlocking a world of comfortable stays and seamless booking experiences.
             </p>
             
@@ -64,7 +64,7 @@ const sendWelcomeEmail = async (email, name) => {
             </div>
             
             <p style="color: #555; line-height: 1.7; font-size: 16px;">
-              At Shri Balaji Guest House, we blend traditional Indian hospitality with modern comforts to ensure your stay is memorable. 
+              At Shri Balaji Home Stay, we blend traditional Indian hospitality with modern comforts to ensure your stay is memorable. 
               Whether you're traveling for business, pilgrimage, or leisure, we're committed to making you feel at home.
             </p>
             
@@ -107,12 +107,12 @@ const sendWelcomeEmail = async (email, name) => {
             </div>
             
             <p style="color: #888; font-size: 14px; line-height: 1.6; margin-bottom: 10px;">
-              <strong>Shri Balaji Guest House</strong><br>
+              <strong>Shri Balaji Home Stay</strong><br>
               Where Tradition Meets Comfort
             </p>
             
             <p style="color: #aaa; font-size: 12px; margin-top: 20px; padding-top: 20px; border-top: 1px solid #e0e0e0;">
-              © ${new Date().getFullYear()} Shri Balaji Guest House. All rights reserved.<br>
+              © ${new Date().getFullYear()} Shri Balaji Home Stay. All rights reserved.<br>
               <a href="YOUR_PRIVACY_POLICY_URL" style="color: #888; text-decoration: none;">Privacy Policy</a> | 
               <a href="YOUR_TERMS_URL" style="color: #888; text-decoration: none;">Terms of Service</a>
             </p>

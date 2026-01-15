@@ -14,6 +14,7 @@ const {
   getRevenue
 } = require('../controllers/customBookingController');
 const { getStaff, getStaffMember, createStaff, updateStaff, deleteStaff } = require('../controllers/staffController');
+const { getAllUsers, updateUserStatus } = require('../controllers/userController');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -68,6 +69,10 @@ router.put('/staff/:id', upload.fields([
   { name: 'documents', maxCount: 10 }
 ]), updateStaff);
 router.delete('/staff/:id', deleteStaff);
+
+// Users
+router.get('/users', getAllUsers);
+router.put('/users/:id/status', updateUserStatus);
 
 // Dashboard
 router.get('/dashboard', async (req, res) => {

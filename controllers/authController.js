@@ -18,7 +18,7 @@ exports.signup = async (req, res) => {
     sendWelcomeEmail(email, name);
 
     const token = jwt.sign({ id: user._id, name, email, role: user.role }, process.env.JWT_SECRET);
-    res.status(201).json({ token, user: { id: user._id, name, email, mobile, address, profilePicture, role: user.role } });
+    res.status(201).json({ token, user: { id: user._id, name, email, mobile, address, profilePicture, role: user.role, status: user.status } });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -30,11 +30,13 @@ exports.login = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: 'Invalid credentials' });
 
+    if (user.status !== 'active') return res.status(403).json({ message: 'Account is inactive' });
+
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
 
     const token = jwt.sign({ id: user._id, name: user.name, email, role: user.role }, process.env.JWT_SECRET);
-    res.json({ token, user: { id: user._id, name: user.name, email, profilePicture: user.profilePicture, role: user.role } });
+    res.json({ token, user: { id: user._id, name: user.name, email, profilePicture: user.profilePicture, role: user.role, status: user.status } });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
