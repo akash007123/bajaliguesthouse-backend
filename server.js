@@ -19,6 +19,7 @@ app.use('/api/rooms', require('./routes/rooms'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/bookings', require('./routes/bookings'));
+app.use('/api/darshans', require('./routes/darshans'));
 
 // Hotel info
 const hotelInfo = {

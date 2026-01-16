@@ -15,6 +15,7 @@ const {
 } = require('../controllers/customBookingController');
 const { getStaff, getStaffMember, createStaff, updateStaff, deleteStaff } = require('../controllers/staffController');
 const { getAllUsers, updateUserStatus } = require('../controllers/userController');
+const { getDarshans, getDarshan, createDarshan, updateDarshan, deleteDarshan } = require('../controllers/darshanController');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -73,6 +74,13 @@ router.delete('/staff/:id', deleteStaff);
 // Users
 router.get('/users', getAllUsers);
 router.put('/users/:id/status', updateUserStatus);
+
+// Darshans
+router.get('/darshans', getDarshans);
+router.get('/darshans/:id', getDarshan);
+router.post('/darshans', createDarshan);
+router.put('/darshans/:id', updateDarshan);
+router.delete('/darshans/:id', deleteDarshan);
 
 // Dashboard
 router.get('/dashboard', async (req, res) => {
