@@ -26,6 +26,10 @@ exports.updateUserStatus = async (req, res) => {
 exports.getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
+    // Ensure profilePicture is a full URL
+    if (user.profilePicture && !user.profilePicture.startsWith('http')) {
+      user.profilePicture = `${req.protocol}://${req.get('host')}/${user.profilePicture}`;
+    }
     res.json(user);
   } catch (err) {
     res.status(500).json({ message: err.message });
