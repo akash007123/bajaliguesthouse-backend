@@ -74,7 +74,12 @@ exports.createBooking = async (req, res) => {
 
 exports.updateBookingStatus = async (req, res) => {
   try {
-    const booking = await Booking.findByIdAndUpdate(req.params.id, { status: req.body.status }, { new: true });
+    const { status } = req.body;
+    const validStatuses = ['New', 'Pending', 'Approved', 'Cancelled', 'Completed'];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ message: 'Invalid status' });
+    }
+    const booking = await Booking.findByIdAndUpdate(req.params.id, { status }, { new: true });
     if (!booking) return res.status(404).json({ message: 'Booking not found' });
     res.json(booking);
   } catch (err) {
