@@ -92,6 +92,25 @@ exports.updateBookingStatus = async (req, res) => {
   try {
     const booking = await Booking.findByIdAndUpdate(req.params.id, { status: req.body.status }, { new: true });
     if (!booking) return res.status(404).json({ message: 'Booking not found' });
+
+    // Emit real-time notification if booking is approved
+    if (req.body.status === 'Approved') {
+      const io = req.app.get('io');
+      if (io) {
+        io.emit('bookingApproved', {
+          id: booking._id,
+          userId: booking.userId,
+          userName: booking.userName,
+          roomName: booking.roomName,
+          checkIn: booking.checkIn.toISOString(),
+          checkOut: booking.checkOut.toISOString(),
+          totalPrice: booking.totalPrice,
+          createdAt: new Date().toISOString(),
+          type: 'bookingApproved'
+        });
+      }
+    }
+
     res.json(booking);
   } catch (err) {
     res.status(400).json({ message: err.message });
