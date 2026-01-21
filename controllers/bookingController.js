@@ -66,6 +66,22 @@ exports.createBooking = async (req, res) => {
       specialRequests
     });
     await booking.save();
+
+    // Emit real-time notification to admins
+    const io = req.app.get('io');
+    if (io) {
+      io.emit('newBooking', {
+        id: booking._id,
+        userName: user.name,
+        roomName: room.name,
+        checkIn: checkInDate.toISOString(),
+        checkOut: checkOutDate.toISOString(),
+        totalPrice,
+        createdAt: new Date().toISOString(),
+        type: 'newBooking'
+      });
+    }
+
     res.status(201).json(booking);
   } catch (err) {
     res.status(500).json({ message: err.message });
