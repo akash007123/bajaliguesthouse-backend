@@ -17,6 +17,7 @@ const { getStaff, getStaffMember, createStaff, updateStaff, deleteStaff } = requ
 const { getAllUsers, updateUserStatus } = require('../controllers/userController');
 const { getDarshans, getDarshan, createDarshan, updateDarshan, deleteDarshan } = require('../controllers/darshanController');
 const { getAllNewsletters, deleteNewsletter } = require('../controllers/newsletterController');
+const { getAllContacts, getContact, createContact, updateContact, updateContactStatus, deleteContact } = require('../controllers/contactController');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -104,5 +105,13 @@ router.get('/dashboard', async (req, res) => {
 // Newsletters
 router.get('/newsletters', getAllNewsletters);
 router.delete('/newsletters/:id', deleteNewsletter);
+
+// Contacts
+router.get('/contacts', getAllContacts);
+router.get('/contacts/:id', getContact);
+router.post('/contacts', createContact);
+router.put('/contacts/:id', updateContact);
+router.put('/contacts/:id/status', updateContactStatus);
+router.delete('/contacts/:id', deleteContact);
 
 module.exports = router;
