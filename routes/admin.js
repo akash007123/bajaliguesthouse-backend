@@ -16,6 +16,7 @@ const {
 const { getStaff, getStaffMember, createStaff, updateStaff, deleteStaff } = require('../controllers/staffController');
 const { getAllUsers, updateUserStatus } = require('../controllers/userController');
 const { getDarshans, getDarshan, createDarshan, updateDarshan, deleteDarshan } = require('../controllers/darshanController');
+const { getAllNewsletters, deleteNewsletter } = require('../controllers/newsletterController');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -99,5 +100,9 @@ router.get('/dashboard', async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+// Newsletters
+router.get('/newsletters', getAllNewsletters);
+router.delete('/newsletters/:id', deleteNewsletter);
 
 module.exports = router;
