@@ -17,6 +17,8 @@ const bookingSchema = new mongoose.Schema({
   reviewApproved: { type: Boolean, default: false },
   rating: Number,
   feedback: String,
+  approvedBy: { type: String },
+  approvedAt: { type: Date },
   createdAt: { type: Date, default: Date.now }
 });
 

@@ -99,7 +99,12 @@ exports.createBooking = async (req, res) => {
 
 exports.updateBookingStatus = async (req, res) => {
   try {
-    const booking = await Booking.findByIdAndUpdate(req.params.id, { status: req.body.status }, { new: true });
+    const updateData = { status: req.body.status };
+    if (req.body.status === 'Approved') {
+      updateData.approvedBy = req.user.name; // Assuming req.user has name
+      updateData.approvedAt = new Date();
+    }
+    const booking = await Booking.findByIdAndUpdate(req.params.id, updateData, { new: true });
     if (!booking) return res.status(404).json({ message: 'Booking not found' });
 
     // Emit real-time notification if booking is approved
