@@ -79,6 +79,7 @@ exports.createBooking = async (req, res) => {
     // Emit real-time notification to admins
     const io = req.app.get('io');
     if (io) {
+      console.log('Emitting newBooking event');
       io.emit('newBooking', {
         id: booking._id,
         userName: user.name,
@@ -111,6 +112,7 @@ exports.updateBookingStatus = async (req, res) => {
     if (req.body.status === 'Approved') {
       const io = req.app.get('io');
       if (io) {
+        console.log('Emitting bookingApproved event');
         io.emit('bookingApproved', {
           id: booking._id,
           userId: booking.userId,

@@ -3,6 +3,7 @@ const Room = require('../models/Room');
 exports.getRooms = async (req, res) => {
   try {
     const rooms = await Room.find();
+    console.log(`Found ${rooms.length} rooms for ${req.user ? 'admin' : 'public'} request`);
     const roomsWithId = rooms.map(room => ({ ...room.toObject(), id: room._id.toString() }));
     res.json(roomsWithId);
   } catch (err) {

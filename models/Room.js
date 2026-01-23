@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const roomSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  type: { type: String, enum: ['Deluxe', 'Executive', 'Presidential', 'Standard'], required: true },
+  type: { type: String, enum: ['Deluxe', 'Executive', 'Presidential', 'Standard', 'Family', 'Honeymoon'], required: true },
   price: { type: Number, required: true },
   discountPrice: Number,
   description: { type: String, required: true },
