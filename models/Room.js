@@ -13,7 +13,9 @@ const roomSchema = new mongoose.Schema({
   capacity: { type: Number, required: true },
   bedType: { type: String, required: true },
   size: { type: Number, required: true },
-  available: { type: Boolean, default: true }
+  available: { type: Boolean, default: true },
+  availableFrom: Date,
+  availableTo: Date
 });
 
 module.exports = mongoose.model('Room', roomSchema);

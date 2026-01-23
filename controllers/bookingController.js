@@ -32,6 +32,15 @@ exports.createBooking = async (req, res) => {
     if (checkInDate >= checkOutDate) {
       return res.status(400).json({ message: 'Check-out date must be after check-in date' });
     }
+
+    // Check if booking dates are within room availability dates
+    if (room.availableFrom && checkInDate < new Date(room.availableFrom)) {
+      return res.status(400).json({ message: 'Room is not available on the selected check-in date' });
+    }
+    if (room.availableTo && checkOutDate > new Date(room.availableTo)) {
+      return res.status(400).json({ message: 'Room is not available on the selected check-out date' });
+    }
+
     if (guests > room.capacity) return res.status(400).json({ message: 'Number of guests exceeds room capacity' });
 
     // Check for overlapping bookings
