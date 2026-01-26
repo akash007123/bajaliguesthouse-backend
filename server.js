@@ -31,6 +31,7 @@ app.use('/api/bookings', require('./routes/bookings'));
 app.use('/api/darshans', require('./routes/darshans'));
 app.use('/api/newsletters', require('./routes/newsletters'));
 app.use('/api/contacts', require('./routes/contacts'));
+app.use('/api/reviews', require('./routes/reviews'));
 
 // Hotel info
 const hotelInfo = {
